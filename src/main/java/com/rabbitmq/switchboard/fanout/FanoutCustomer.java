@@ -1,4 +1,4 @@
-package com.rabbitmq.switchboard;
+package com.rabbitmq.switchboard.fanout;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
