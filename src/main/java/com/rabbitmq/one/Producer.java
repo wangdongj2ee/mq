@@ -6,6 +6,7 @@ import java.util.concurrent.TimeoutException;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.MessageProperties;
 
 /**
  * mq生产者
@@ -26,7 +27,7 @@ public class Producer {
 		boolean autoDelete = false;//在最后一个连接断开时是否自动删除队列
 		channel.queueDeclare(QUEUE_NAME, durable,exclusive,autoDelete,null);
 		String message="hello world";
-		channel.basicPublish("", QUEUE_NAME, null,message.getBytes("UTF-8"));
+		channel.basicPublish("", QUEUE_NAME,null,message.getBytes("UTF-8"));
 		channel.close();
 		connection.close();
 		System.out.println("发送完成，message="+message);
