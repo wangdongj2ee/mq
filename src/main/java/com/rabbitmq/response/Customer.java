@@ -1,4 +1,4 @@
-package com.rabbitmq.one;
+package com.rabbitmq.response;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -28,6 +28,7 @@ public class Customer {
 		// 声明要关注的队列
 		channel.queueDeclare(QUEUE_NAME, false, false, false, null);
 		System.out.println("Customer Waiting Received messages");
+		channel.basicQos(1);//指定该消费者每次接受多少个消息，只要等接收到的消息都接收完成了才接收新的消息
 		// DefaultConsumer类实现了Consumer接口，通过传入一个频道，
 		// 告诉服务器我们需要那个频道的消息，如果频道中有消息，就会执行回调函数handleDelivery
 		Consumer consumer = new DefaultConsumer(channel) {
@@ -37,17 +38,16 @@ public class Customer {
 				String message = new String(body, "UTF-8");
 				System.out.println("Customer Received '" + message + "'");
 				try {
-					Thread.sleep(10000);
+					//Thread.sleep(10000);
 					channel.basicAck(envelope.getDeliveryTag(), false);  
-				} catch (InterruptedException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				System.out.println("Customer Received '" + message + "'");
 			}
 		};
-		// 自动回复队列应答 -- RabbitMQ中的消息确认机制
-		boolean ack = false;
+		boolean ack = false;//消息确认 truew为自动确认  false需要手动确认，如果此值为false的话那么需要channel.basicAck来确认消息消费完成
 		channel.basicConsume(QUEUE_NAME, ack, consumer);
 	}
 }
